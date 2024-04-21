@@ -32,9 +32,6 @@ jobs:
       - name: Generate kover coverage report
         run: ./gradlew koverXmlReport
 
-      - name: Sonar
-        run: ./gradlew sonar
-
   build:
     strategy:
       matrix:
