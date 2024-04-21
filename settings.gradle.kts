@@ -1,4 +1,4 @@
-rootProject.name = "airflux-commons"
+rootProject.name = "airflux-commons-kmp"
 
 include(":airflux-commons-text")
 project(":airflux-commons-text").projectDir = file("./modules/text")
