@@ -35,27 +35,30 @@ jobs:
   build:
     strategy:
       matrix:
-        config: [
-          { target: linux, os: ubuntu-latest, tasks: test, continueOnError: false },
-        ]
-    runs-on: ${{ matrix.config.os }}
+        version: [ 8, 17 ]
+    runs-on: ubuntu-latest
     name: Test ${{ matrix.config.target }}
     needs: check
+    env:
+      JDK: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup JDK 17
+      - name: Setup JDK ${{ JDK }}
         uses: actions/setup-java@v3
         with:
-          java-version: 17
+          java-version: ${{ matrix.version }}
           distribution: 'temurin'
+
+      - name: Echo JDK
+        run: echo ${{ env.JDK }}
 
       - name: Setup gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Test ${{ matrix.config.target }} targets
-        continue-on-error: ${{ matrix.config.continueOnError }}
-        run: ./gradlew ${{ matrix.config.tasks }}
+      - name: Test
+        continue-on-error: false
+        run: ./gradlew test
 
   release:
     name: Release
