@@ -30,13 +30,16 @@ jobs:
         run: ./gradlew apiCheck
 
       - name: Generate kover coverage report
-        run: ./gradlew koverMergedXmlReport
+        run: ./gradlew koverXmlReport
 
-  test:
+      - name: Sonar
+        run: ./gradlew sonar
+
+  build:
     strategy:
       matrix:
         config: [
-          { target: linux, os: ubuntu-latest, tasks: test koverXmlReport sonar, continueOnError: false },
+          { target: linux, os: ubuntu-latest, tasks: test, continueOnError: false },
         ]
     runs-on: ${{ matrix.config.os }}
     name: Test ${{ matrix.config.target }}
@@ -55,11 +58,11 @@ jobs:
         continue-on-error: ${{ matrix.config.continueOnError }}
         run: ./gradlew ${{ matrix.config.tasks }}
 
-  publish:
+  release:
     name: Release
     runs-on: ubuntu-latest
     needs:
-      - test
+      - build
 
     steps:
       - uses: actions/checkout@v3
