@@ -35,7 +35,7 @@ jobs:
   build:
     strategy:
       matrix:
-        version: [ 8, 17 ]
+        version: [ 1.8, 17 ]
     runs-on: ubuntu-latest
     name: Test ${{ matrix.config.target }}
     needs: check
