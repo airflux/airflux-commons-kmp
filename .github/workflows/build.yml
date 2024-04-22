@@ -25,20 +25,30 @@ jobs:
           java-version: ${{env.MAX_JAVA_VERSION}}
           distribution: 'temurin'
 
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Check api
-        run: ./gradlew apiCheck
+        run: ./gradlew apiCheck --no-daemon
 
       - name: Generate kover coverage report
-        run: ./gradlew koverXmlReport
+        run: ./gradlew koverXmlReport --no-daemon
 
   build:
     strategy:
       max-parallel: 1
       matrix:
-        version: [ 1.8, 11 ]
+        version: [ 1.8 ]
         target: [
           { arch: x64, os: ubuntu-latest },
         ]
@@ -58,9 +68,19 @@ jobs:
           distribution: 'temurin'
           architecture: ${{ matrix.target.arch }}
 
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build
         continue-on-error: false
-        run: ./gradlew build
+        run: ./gradlew build --no-daemon
