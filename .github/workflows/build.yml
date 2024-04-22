@@ -11,20 +11,20 @@ on:
   workflow_dispatch:
 
 env:
-  MAX_JDK: 17
+  MAX_JDK: '17'
 
 jobs:
   check:
     runs-on: ubuntu-latest
     env:
-      JAVA_VERSION: '$MAX_JDK'
+      JAVA_VERSION: $MAX_JDK
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup JDK '$MAX_JDK'
+      - name: Setup JDK $MAX_JDK
         uses: actions/setup-java@v4.2.1
         with:
-          java-version: '$MAX_JDK'
+          java-version: $MAX_JDK
           distribution: 'temurin'
 
       - name: Grant execute permission for gradlew
@@ -50,10 +50,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup JDK '$MAX_JDK'
+      - name: Setup JDK $MAX_JDK
         uses: actions/setup-java@v4.2.1
         with:
-          java-version: '$MAX_JDK'
+          java-version: $MAX_JDK
           distribution: 'temurin'
           architecture: ${{ matrix.arch }}
 
