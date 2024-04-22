@@ -41,7 +41,7 @@ jobs:
         version: [ 1.8 ]
         target: [
           { arch: x64, os: ubuntu-latest },
-          { arch: arm64, os: macos-latest },
+          { arch: aarch64, os: macos-latest },
         ]
     runs-on: ${{ matrix.target.os }}
     needs: check
