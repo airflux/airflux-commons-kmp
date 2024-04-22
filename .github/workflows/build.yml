@@ -45,7 +45,7 @@ jobs:
         run: ./gradlew apiCheck --no-daemon
 
       - name: Detekt
-        run: ./gradlew apiCheck --no-daemon
+        run: ./gradlew detekt --no-daemon
 
       - name: Generate kover coverage report
         run: ./gradlew koverXmlReport --no-daemon
