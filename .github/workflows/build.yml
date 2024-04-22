@@ -10,6 +10,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  JAVA_DISTRIBUTION: 'temurin'
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -23,7 +26,7 @@ jobs:
         uses: actions/setup-java@v4.2.1
         with:
           java-version: ${{env.MAX_JAVA_VERSION}}
-          distribution: 'temurin'
+          distribution: $JAVA_DISTRIBUTION
 
       - name: Cache Gradle
         uses: actions/cache@v3
@@ -65,7 +68,7 @@ jobs:
         uses: actions/setup-java@v4.2.1
         with:
           java-version: ${{env.MAX_JAVA_VERSION}}
-          distribution: 'temurin'
+          distribution: $JAVA_DISTRIBUTION
           architecture: ${{ matrix.target.arch }}
 
       - name: Cache Gradle
