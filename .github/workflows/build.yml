@@ -34,6 +34,9 @@ jobs:
         run: ./gradlew koverXmlReport
 
   build:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     strategy:
       matrix:
         version: [ 1.8, 17, 21 ]
