@@ -38,12 +38,11 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        version: [ 1.8 ]
+        version: [ 1.8, 11 ]
         target: [
           { arch: x64, os: ubuntu-latest },
-          { arch: aarch64, os: macos-latest },
         ]
-    runs-on: ${{ matrix.target.os }}
+    runs-on: ubuntu-latest
     needs: check
     env:
       MAX_JAVA_VERSION: 17
