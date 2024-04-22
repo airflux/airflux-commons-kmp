@@ -34,9 +34,8 @@ jobs:
         run: ./gradlew koverXmlReport
 
   build:
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
     strategy:
+      max-parallel: 1
       matrix:
         version: [ 1.8, 17, 21 ]
     runs-on: ubuntu-latest
