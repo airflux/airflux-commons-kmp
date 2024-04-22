@@ -39,13 +39,16 @@ jobs:
       max-parallel: 1
       matrix:
         version: [ 1.8 ]
-        arch: [ x64, arm64 ]
-    runs-on: ubuntu-latest
+        target: [
+          { arch: x64, os: ubuntu-latest },
+          { arch: arm64, os: macos-latest },
+        ]
+    runs-on: ${{ matrix.target.os }}
     needs: check
     env:
       MAX_JAVA_VERSION: 17
       JAVA_VERSION: ${{matrix.version}}
-    name: Build with JDK ${{ matrix.version }} ${{ matrix.arch }}
+    name: Build with JDK ${{ matrix.version }} ${{ matrix.target.arch }}
     steps:
       - uses: actions/checkout@v4
 
@@ -54,7 +57,7 @@ jobs:
         with:
           java-version: ${{env.MAX_JAVA_VERSION}}
           distribution: 'temurin'
-          architecture: ${{ matrix.arch }}
+          architecture: ${{ matrix.target.arch }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
