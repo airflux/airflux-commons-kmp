@@ -44,6 +44,9 @@ jobs:
       - name: Check api
         run: ./gradlew apiCheck --no-daemon
 
+      - name: Detekt
+        run: ./gradlew apiCheck --no-daemon
+
       - name: Generate kover coverage report
         run: ./gradlew koverXmlReport --no-daemon
 
@@ -86,4 +89,4 @@ jobs:
 
       - name: Build
         continue-on-error: false
-        run: ./gradlew build --no-daemon
+        run: ./gradlew build -x detekt --no-daemon
