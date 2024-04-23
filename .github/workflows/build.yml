@@ -1,10 +1,8 @@
 name: CI
 
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push event but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -34,7 +32,8 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: |
+            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -53,6 +52,7 @@ jobs:
   build:
     strategy:
       max-parallel: 1
+      fail-fast: true
       matrix:
         version: [ 1.8 ]
         target: [
@@ -73,16 +73,14 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           architecture: ${{ matrix.target.arch }}
 
-      - name: Cache Gradle
-        uses: actions/cache@v3
+      - name: Restore Gradle Cache
+        uses: actions/cache/restore@v3
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: |
             ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -101,6 +99,7 @@ jobs:
   publish:
     strategy:
       max-parallel: 1
+      fail-fast: true
       matrix:
         version: [ 1.8 ]
         target: [
@@ -118,7 +117,7 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           architecture: ${{ matrix.target.arch }}
 
-      - name: Cache Gradle
+      - name: Restore Gradle Cache
         uses: actions/cache/restore@v3
         with:
           path: |
@@ -127,7 +126,7 @@ jobs:
           key: |
             ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
-      - name: Restore workspace
+      - name: Restore Workspace
         uses: actions/cache/restore@v3
         with:
           path: ${{ github.workspace }}
@@ -135,6 +134,6 @@ jobs:
             build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
           fail-on-cache-miss: true
 
-      - name: Build
+      - name: Publish
         continue-on-error: false
         run: ./gradlew build -x detekt --no-daemon
