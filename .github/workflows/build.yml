@@ -97,3 +97,27 @@ jobs:
           path: ${{ runner.temp }}
           key: |
             build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
+
+  publish:
+    strategy:
+      max-parallel: 1
+      matrix:
+        version: [ 1.8 ]
+        target: [
+          { arch: x64, os: ubuntu-latest },
+        ]
+    runs-on: ${{ matrix.target.os }}
+    needs: check
+    env:
+      JAVA_VERSION: ${{ matrix.version }}
+    steps:
+      - name: Restore workspace
+        uses: actions/cache/restore@v3
+        with:
+          path: ${{ runner.temp }}
+          key: |
+            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
+
+      - name: Build
+        continue-on-error: false
+        run: ./gradlew build -x detekt --no-daemon
