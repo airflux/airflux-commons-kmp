@@ -94,6 +94,6 @@ jobs:
       - name: Save workspace
         uses: actions/cache/save@v3
         with:
-          path: ${{ runner.workspace }}
+          path: ${{ runner.temp }}
           key: |
             build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
