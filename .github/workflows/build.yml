@@ -94,7 +94,7 @@ jobs:
       - name: Save workspace
         uses: actions/cache/save@v3
         with:
-          path: ${{ runner.temp }}
+          path: ${{ github.workspace }}
           key: |
             build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
 
@@ -111,10 +111,17 @@ jobs:
     env:
       JAVA_VERSION: ${{ matrix.version }}
     steps:
+      - name: Setup JDK ${{ env.MAX_JAVA_VERSION }}
+        uses: actions/setup-java@v4.2.1
+        with:
+          java-version: ${{ env.MAX_JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          architecture: ${{ matrix.target.arch }}
+
       - name: Restore workspace
         uses: actions/cache/restore@v3
         with:
-          path: ${{ runner.temp }}
+          path: ${{ github.workspace }}
           key: |
             build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
           fail-on-cache-miss: true
