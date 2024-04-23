@@ -18,7 +18,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     env:
-      JAVA_VERSION: ${{ env.MAX_JAVA_VERSION }}
+      JAVA_VERSION: ${{ MAX_JAVA_VERSION }}
     steps:
       - uses: actions/checkout@v4
 
