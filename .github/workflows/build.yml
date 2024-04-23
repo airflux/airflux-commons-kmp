@@ -58,7 +58,7 @@ jobs:
         target: [
           { arch: x64, os: ubuntu-latest },
         ]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.target.os }}
     needs: check
     env:
       JAVA_VERSION: ${{ matrix.version }}
