@@ -107,7 +107,7 @@ jobs:
           { arch: x64, os: ubuntu-latest },
         ]
     runs-on: ${{ matrix.target.os }}
-    needs: check
+    needs: build
     env:
       JAVA_VERSION: ${{ matrix.version }}
     steps:
@@ -117,6 +117,7 @@ jobs:
           path: ${{ runner.temp }}
           key: |
             build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
+          fail-on-cache-miss: true
 
       - name: Build
         continue-on-error: false
