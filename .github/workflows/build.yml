@@ -79,7 +79,8 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: |
+            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -89,3 +90,10 @@ jobs:
       - name: Build
         continue-on-error: false
         run: ./gradlew build -x detekt --no-daemon
+
+      - name: Save workspace
+        uses: actions/cache/save@v3
+        with:
+          path: ${{ runner.workspace }}
+          key: |
+            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
