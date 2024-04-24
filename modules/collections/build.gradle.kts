@@ -15,9 +15,9 @@ dependencies {
     /* Kotlin */
     implementation(kotlin("stdlib"))
 
-    implementation(project(":airflux-commons-text"))
+    implementation(project(":airflux-commons-text-kmp"))
 
     testImplementation(libs.bundles.kotest)
-    testImplementation(project(":airflux-commons-kotest-assertions"))
+    testImplementation(project(":airflux-commons-kotest-assertions-kmp"))
 }
 

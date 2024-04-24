@@ -18,11 +18,11 @@ allprojects {
 }
 
 dependencies {
-    kover(project(":airflux-commons-collections"))
-    kover(project(":airflux-commons-kotest-assertions"))
-    kover(project(":airflux-commons-text"))
-    kover(project(":airflux-commons-types"))
-    kover(project(":airflux-commons-types-test"))
+    kover(project(":airflux-commons-collections-kmp"))
+    kover(project(":airflux-commons-kotest-assertions-kmp"))
+    kover(project(":airflux-commons-text-kmp"))
+    kover(project(":airflux-commons-types-kmp"))
+    kover(project(":airflux-commons-types-test-kmp"))
 }
 
 sonar {

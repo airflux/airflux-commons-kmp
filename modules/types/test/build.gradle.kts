@@ -7,6 +7,6 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":airflux-commons-types"))
+    implementation(project(":airflux-commons-types-kmp"))
     implementation(libs.bundles.kotest)
 }
