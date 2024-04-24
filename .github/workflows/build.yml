@@ -50,14 +50,8 @@ jobs:
       - name: Detekt
         run: ./gradlew detekt --no-daemon
 
-      - name: Generate kover coverage report
-        run: ./gradlew koverXmlReport --no-daemon
-
-      - name: Report2
-        run: cat ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
-
       - name: Sonar
-        run: ./gradlew sonar --no-daemon
+        run: ./gradlew test koverXmlReport sonar --no-daemon
 
   build:
     strategy:
