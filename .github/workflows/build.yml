@@ -50,8 +50,13 @@ jobs:
       - name: Detekt
         run: ./gradlew detekt --no-daemon
 
+      - name: Generate kover coverage report
+        run: ./gradlew test koverXmlReport --no-daemon
+
       - name: Sonar
-        run: ./gradlew test koverXmlReport sonar --no-daemon
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar --no-daemon
 
   build:
     strategy:
