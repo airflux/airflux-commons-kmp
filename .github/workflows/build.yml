@@ -18,7 +18,8 @@ jobs:
     env:
       JAVA_VERSION: 17
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
@@ -52,12 +53,18 @@ jobs:
       - name: Generate kover coverage report
         run: ./gradlew koverXmlReport --no-daemon
 
+      - name: Report2
+        run: cat ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
+
+      - name: Sonar
+        run: ./gradlew sonar --no-daemon
+
   build:
     strategy:
       max-parallel: 1
       fail-fast: true
       matrix:
-        version: [ 1.8, 17 ]
+        version: [ 1.8 ]
         target: [
           { arch: x64, os: ubuntu-latest },
         ]
@@ -67,7 +74,8 @@ jobs:
       JAVA_VERSION: ${{ matrix.version }}
     name: Build with JDK ${{ matrix.version }} ${{ matrix.target.arch }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
@@ -104,7 +112,7 @@ jobs:
       max-parallel: 1
       fail-fast: true
       matrix:
-        version: [ 1.8, 17 ]
+        version: [ 1.8 ]
         target: [
           { arch: x64, os: ubuntu-latest },
         ]
