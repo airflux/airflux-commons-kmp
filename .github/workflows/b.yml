@@ -1,0 +1,56 @@
+on:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    workflow_call:
+      inputs:
+        jdk-version:
+          required: true
+          type: number
+        target-build-version:
+          required: true
+          type: number
+        arch:
+          required: true
+          type: string
+        os:
+          required: true
+          type: string
+
+jobs:
+  build:
+    name: Build with JDK ${{ inputs.target-build-version }} ${{ inputs.arch }}
+    runs-on: ${{ inputs.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup JDK ${{ inputs.jdk-version }}
+        uses: actions/setup-java@v4.2.1
+        with:
+          java-version: ${{ inputs.jdk-version }}
+          distribution: ${{ input.target-build-versions }}
+          architecture: ${{ input.arch }}
+
+      - name: Restore Gradle Cache
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: |
+            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/*.versions.toml') }}
+
+      - name: Build
+        continue-on-error: false
+        run: ./gradlew build -x detekt --no-daemon
+
+#      - name: Save workspace
+#        uses: actions/cache/save@v3
+#        with:
+#          path: ${{ github.workspace }}
+#          key: |
+#            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
