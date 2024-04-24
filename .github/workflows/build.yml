@@ -135,5 +135,12 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Publish
+        env:
+          REPOSITORY_SNAPSHOTS_URL: ${{ secrets.REPOSITORY_SNAPSHOTS_URL }}
+          REPOSITORY_RELEASES_URL: ${{ secrets.REPOSITORY_RELEASES_URL }}
+          REPOSITORY_USERNAME: ${{ secrets.REPOSITORY_USERNAME }}
+          REPOSITORY_PASSWORD: ${{ secrets.REPOSITORY_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         continue-on-error: false
-        run: ./gradlew build -x detekt --no-daemon
+        run: ./gradlew publish -x detekt --no-daemon
