@@ -11,12 +11,12 @@ on:
 env:
   JAVA_DISTRIBUTION: 'temurin'
   MAX_JAVA_VERSION: 17
-  JAVA_VERSION: ${{MAX_JAVA_VERSION}}
 
 jobs:
   check:
-    name: 'Build with JDK ${{MAX_JAVA_VERSION}}'
     runs-on: ubuntu-latest
+    env:
+      JAVA_VERSION: 17
 
     steps:
       - name: Checkout
@@ -55,6 +55,7 @@ jobs:
         run: ./gradlew sonar --no-daemon
 
   build:
+    needs: check
     strategy:
       max-parallel: 1
       fail-fast: true
@@ -64,7 +65,6 @@ jobs:
           { arch: x64, os: ubuntu-latest },
         ]
     runs-on: ${{ matrix.target.os }}
-    needs: check
     env:
       JAVA_VERSION: ${{ matrix.version }}
     name: Build with JDK ${{ matrix.version }} ${{ matrix.target.arch }}
