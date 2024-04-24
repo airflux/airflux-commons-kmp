@@ -16,6 +16,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     env:
+      SEGMENT_DOWNLOAD_TIMEOUT_MINS: '1'
       JAVA_VERSION: 17
     steps:
       - name: Checkout
@@ -29,20 +30,21 @@ jobs:
         with:
           java-version: ${{ env.MAX_JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: 'gradle'
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Cache Gradle
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: |
-            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+#      - name: Cache Gradle
+#        uses: actions/cache@v3
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: |
+#            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-
 
       - name: Check api
         run: ./gradlew apiCheck --no-daemon
@@ -86,74 +88,73 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           architecture: ${{ matrix.target.arch }}
 
-      - name: Restore Gradle Cache
-        uses: actions/cache/restore@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: |
-            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+#      - name: Restore Gradle Cache
+#        uses: actions/cache/restore@v3
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: |
+#            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
       - name: Build
         continue-on-error: false
         run: ./gradlew build -x detekt --no-daemon
 
-      - name: Save workspace
-        uses: actions/cache/save@v3
-        with:
-          path: ${{ github.workspace }}
-          key: |
-            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
+#      - name: Save workspace
+#        uses: actions/cache/save@v3
+#        with:
+#          path: ${{ github.workspace }}
+#          key: |
+#            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
 
-  publish:
-    strategy:
-      max-parallel: 1
-      fail-fast: true
-      matrix:
-        version: [ 1.8 ]
-        target: [
-          { arch: x64, os: ubuntu-latest },
-        ]
-    runs-on: ${{ matrix.target.os }}
-    needs: build
-    env:
-      JAVA_VERSION: ${{ matrix.version }}
-    steps:
-      - name: Setup JDK ${{ env.MAX_JAVA_VERSION }}
-        uses: actions/setup-java@v4.2.1
-        with:
-          java-version: ${{ env.MAX_JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          architecture: ${{ matrix.target.arch }}
-
-      - name: Restore Gradle Cache
-        uses: actions/cache/restore@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: |
-            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-
-      - name: Restore Workspace
-        uses: actions/cache/restore@v3
-        with:
-          path: ${{ github.workspace }}
-          key: |
-            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
-          fail-on-cache-miss: true
-
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
-      - name: Publish
-        env:
-          REPOSITORY_SNAPSHOTS_URL: ${{ secrets.REPOSITORY_SNAPSHOTS_URL }}
-          REPOSITORY_RELEASES_URL: ${{ secrets.REPOSITORY_RELEASES_URL }}
-          REPOSITORY_USERNAME: ${{ secrets.REPOSITORY_USERNAME }}
-          REPOSITORY_PASSWORD: ${{ secrets.REPOSITORY_PASSWORD }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        continue-on-error: false
-        run: ./gradlew publish -x detekt --no-daemon
+#  publish:
+#    strategy:
+#      max-parallel: 1
+#      fail-fast: true
+#      matrix:
+#        version: [ 1.8 ]
+#        target: [
+#          { arch: x64, os: ubuntu-latest },
+#        ]
+#    runs-on: ${{ matrix.target.os }}
+#    needs: build
+#    env:
+#      JAVA_VERSION: ${{ matrix.version }}
+#    steps:
+#      - name: Setup JDK ${{ env.MAX_JAVA_VERSION }}
+#        uses: actions/setup-java@v4.2.1
+#        with:
+#          java-version: ${{ env.MAX_JAVA_VERSION }}
+#          distribution: ${{ env.JAVA_DISTRIBUTION }}
+#          architecture: ${{ matrix.target.arch }}
+#
+#      - name: Restore Gradle Cache
+#        uses: actions/cache/restore@v3
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: |
+#            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+#
+#      - name: Restore Workspace
+#        uses: actions/cache/restore@v3
+#        with:
+#          path: ${{ github.workspace }}
+#          key: |
+#            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
+#          fail-on-cache-miss: true
+#
+#      - name: Setup Gradle
+#        uses: gradle/gradle-build-action@v2
+#
+#      - name: Publish
+#        env:
+#          REPOSITORY_SNAPSHOTS_URL: ${{ secrets.REPOSITORY_SNAPSHOTS_URL }}
+#          REPOSITORY_RELEASES_URL: ${{ secrets.REPOSITORY_RELEASES_URL }}
+#          REPOSITORY_USERNAME: ${{ secrets.REPOSITORY_USERNAME }}
+#          REPOSITORY_PASSWORD: ${{ secrets.REPOSITORY_PASSWORD }}
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        continue-on-error: false
+#        run: ./gradlew publish -x detekt --no-daemon
