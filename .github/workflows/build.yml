@@ -15,7 +15,7 @@ env:
 
 jobs:
   check:
-    name: Build with JDK ${{ env.MAX_JAVA_VERSION }}
+    name: Build with JDK
     runs-on: ubuntu-latest
 
     steps:
