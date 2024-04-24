@@ -27,7 +27,7 @@ dependencies {
 
 sonar {
     properties {
-        property("sonar.projectKey", "airflux_airflux-commons")
+        property("sonar.projectKey", "airflux_airflux-commons-kmp")
         property("sonar.organization", "airflux")
         property("sonar.host.url", "https://sonarcloud.io")
         property(
