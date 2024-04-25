@@ -12,7 +12,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     env:
-      JAVA_VERSION: ${{ vars.JDK_VERSION }
+      JAVA_VERSION: ${{ vars.JDK_VERSION }}
 
     steps:
       - name: Checkout
