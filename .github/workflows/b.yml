@@ -27,7 +27,7 @@ jobs:
         with:
           java-version: ${{ vars.JDK_VERSION }}
           distribution: ${{ vars.JDK_DISTRIBUTION }}
-          architecture: ${{ input.arch }}
+          architecture: ${{ inputs.arch }}
 
       - name: Restore Gradle Cache
         uses: actions/cache/restore@v3
