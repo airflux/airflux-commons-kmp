@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v3
 
       - name: Setup JDK ${{ vars.JDK_VERSION }} ${{ vars.JDK_DISTRIBUTION }}
         uses: actions/setup-java@v4.2.1
@@ -30,7 +30,7 @@ jobs:
           architecture: ${{ inputs.arch }}
 
       - name: Restore Gradle Cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.gradle/caches
@@ -44,9 +44,9 @@ jobs:
         continue-on-error: false
         run: ./gradlew build -x detekt --no-daemon
 
-#      - name: Save workspace
-#        uses: actions/cache/save@v3
-#        with:
-#          path: ${{ github.workspace }}
-#          key: |
-#            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
+      - name: Save workspace
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}
+          key: |
+            build-${{github.sha}}-jdk${{ matrix.version }}-${{matrix.target.arch}}

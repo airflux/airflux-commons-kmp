@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v3
 
       - name: Setup JDK ${{ vars.JDK_VERSION }} ${{ vars.JDK_DISTRIBUTION }}
         uses: actions/setup-java@v4.2.1
@@ -28,7 +28,7 @@ jobs:
           distribution: ${{ vars.JDK_DISTRIBUTION }}
 
       - name: Cache Gradle
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -75,7 +75,7 @@ jobs:
 #        uses: actions/checkout@v4
 #
 #      - name: Validate Gradle Wrapper
-#        uses: gradle/wrapper-validation-action@v1
+#        uses: gradle/wrapper-validation-action@v3
 #
 #      - name: Setup JDK ${{ env.MAX_JAVA_VERSION }}
 #        uses: actions/setup-java@v4.2.1
@@ -126,7 +126,7 @@ jobs:
 #          architecture: ${{ matrix.target.arch }}
 #
 #      - name: Restore Gradle Cache
-#        uses: actions/cache/restore@v3
+#        uses: actions/cache/restore@v4
 #        with:
 #          path: |
 #            ~/.gradle/caches
@@ -135,11 +135,11 @@ jobs:
 #            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 #
 #      - name: Restore Workspace
-#        uses: actions/cache/restore@v3
+#        uses: actions/cache/restore@v4
 #        with:
 #          path: ${{ github.workspace }}
 #          key: |
-#            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
+#            build-${{github.sha}}-jdk${{ inputs.version }}-${{inputs.target.arch}}
 #          fail-on-cache-miss: true
 #
 #      - name: Setup Gradle
