@@ -1,13 +1,13 @@
 on:
   workflow_call:
     inputs:
+      os:
+        required: true
+        type: string
       target-build-version:
         required: true
         type: number
       arch:
-        required: true
-        type: string
-      os:
         required: true
         type: string
 
