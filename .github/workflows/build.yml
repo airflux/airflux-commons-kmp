@@ -64,7 +64,7 @@ jobs:
         target: [
           { arch: x64, os: ubuntu-latest },
         ]
-    uses: ./.github/workflows/b.yml@main
+    uses: ./.github/workflows/b.yml
     with:
       jdk-version: ${{ env.MAX_JAVA_VERSION }}
       target-build-version: ${{ matrix.version }}
