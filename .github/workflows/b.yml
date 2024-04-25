@@ -1,9 +1,6 @@
 on:
   workflow_call:
     inputs:
-      jdk-version:
-        required: true
-        type: number
       target-build-version:
         required: true
         type: number
@@ -25,11 +22,11 @@ jobs:
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
-      - name: Setup JDK ${{ inputs.jdk-version }}
+      - name: Setup JDK ${{ vars.JDK_VERSION }} ${{ vars.JDK_DISTRIBUTION }}
         uses: actions/setup-java@v4.2.1
         with:
-          java-version: ${{ inputs.jdk-version }}
-          distribution: ${{ input.target-build-versions }}
+          java-version: ${{ vars.JDK_VERSION }}
+          distribution: ${{ vars.JDK_DISTRIBUTION }}
           architecture: ${{ input.arch }}
 
       - name: Restore Gradle Cache
@@ -42,6 +39,8 @@ jobs:
             ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/*.versions.toml') }}
 
       - name: Build
+        env:
+          JAVA_VERSION: ${{ inputs.target-build-version }}
         continue-on-error: false
         run: ./gradlew build -x detekt --no-daemon
 
