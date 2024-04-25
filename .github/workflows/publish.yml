@@ -4,16 +4,16 @@ on:
       os:
         required: true
         type: string
-      target-build-version:
+      target-jdk-version:
         required: true
         type: number
-      arch:
+      target-arch:
         required: true
         type: string
 
 jobs:
   publish:
-    name: Publish with JDK ${{ inputs.target-build-version }} ${{ inputs.arch }}
+    name: Publish with JDK ${{ inputs.target-jdk-version }} ${{ target-arch }}
     runs-on: ${{ inputs.os }}
 
     steps:
@@ -22,7 +22,7 @@ jobs:
         with:
           java-version: ${{ vars.JDK_VERSION }}
           distribution: ${{ vars.JDK_DISTRIBUTION }}
-          architecture: ${{ inputs.arch }}
+          architecture: ${{ inputs.target-arch }}
 
       - name: Restore Gradle Cache
         uses: actions/cache/restore@v4
@@ -38,7 +38,7 @@ jobs:
         with:
           path: ${{ github.workspace }}
           key: |
-            build-${{github.sha}}-jdk${{ inputs.target-build-version }}-${{ inputs.arch }}
+            build-${{github.sha}}-jdk${{ inputs.target-jdk-version }}-${{ inputs.target-arch }}
           fail-on-cache-miss: true
 
       - name: Publish

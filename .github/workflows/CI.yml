@@ -22,7 +22,7 @@ jobs:
         uses: gradle/actions/wrapper-validation@v3
 
       - name: Setup JDK ${{ vars.JDK_VERSION }} ${{ vars.JDK_DISTRIBUTION }}
-        uses: actions/setup-java@v4.2.1
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ vars.JDK_VERSION }}
           distribution: ${{ vars.JDK_DISTRIBUTION }}
@@ -36,10 +36,10 @@ jobs:
           key: |
             ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/*.versions.toml') }}
 
-      - name: Check api
+      - name: Check API
         run: ./gradlew apiCheck --no-daemon
 
-      - name: Detekt
+      - name: Check code style
         run: ./gradlew detekt --no-daemon
 
       - name: Test and generate kover coverage report
@@ -62,8 +62,8 @@ jobs:
         ]
     uses: ./.github/workflows/build.yml
     with:
-      target-build-version: ${{ matrix.version }}
-      arch: ${{ matrix.target.arch }}
+      target-jdk-version: ${{ matrix.version }}
+      target-arch: ${{ matrix.target.arch }}
       os: ${{ matrix.target.os }}
 
   publish:
@@ -78,96 +78,7 @@ jobs:
         ]
     uses: ./.github/workflows/publish.yml
     with:
-      target-build-version: ${{ matrix.version }}
-      arch: ${{ matrix.target.arch }}
+      target-jdk-version: ${{ matrix.version }}
+      target-arch: ${{ matrix.target.arch }}
       os: ${{ matrix.target.os }}
     secrets: inherit
-
-#    runs-on: ${{ matrix.target.os }}
-#    env:
-#      JAVA_VERSION: ${{ matrix.version }}
-#    name: Build with JDK ${{ matrix.version }} ${{ matrix.target.arch }}
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#
-#      - name: Validate Gradle Wrapper
-#        uses: gradle/wrapper-validation-action@v3
-#
-#      - name: Setup JDK ${{ env.MAX_JAVA_VERSION }}
-#        uses: actions/setup-java@v4.2.1
-#        with:
-#          java-version: ${{ env.MAX_JAVA_VERSION }}
-#          distribution: ${{ env.JAVA_DISTRIBUTION }}
-#          architecture: ${{ matrix.target.arch }}
-#
-#      - name: Restore Gradle Cache
-#        uses: actions/cache/restore@v3
-#        with:
-#          path: |
-#            ~/.gradle/caches
-#            ~/.gradle/wrapper
-#          key: |
-#            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/*.versions.toml') }}
-#
-#      - name: Build
-#        continue-on-error: false
-#        run: ./gradlew build -x detekt --no-daemon
-
-#      - name: Save workspace
-#        uses: actions/cache/save@v3
-#        with:
-#          path: ${{ github.workspace }}
-#          key: |
-#            build-${{github.sha}}-${{ matrix.version }}-${{matrix.target.arch}}
-
-#  publish:
-#    strategy:
-#      max-parallel: 1
-#      fail-fast: true
-#      matrix:
-#        version: [ 1.8 ]
-#        target: [
-#          { arch: x64, os: ubuntu-latest },
-#        ]
-#    runs-on: ${{ matrix.target.os }}
-#    needs: build
-#    env:
-#      JAVA_VERSION: ${{ matrix.version }}
-#    steps:
-#      - name: Setup JDK ${{ env.MAX_JAVA_VERSION }}
-#        uses: actions/setup-java@v4.2.1
-#        with:
-#          java-version: ${{ env.MAX_JAVA_VERSION }}
-#          distribution: ${{ env.JAVA_DISTRIBUTION }}
-#          architecture: ${{ matrix.target.arch }}
-#
-#      - name: Restore Gradle Cache
-#        uses: actions/cache/restore@v4
-#        with:
-#          path: |
-#            ~/.gradle/caches
-#            ~/.gradle/wrapper
-#          key: |
-#            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-#
-#      - name: Restore Workspace
-#        uses: actions/cache/restore@v4
-#        with:
-#          path: ${{ github.workspace }}
-#          key: |
-#            build-${{github.sha}}-jdk${{ inputs.version }}-${{inputs.target.arch}}
-#          fail-on-cache-miss: true
-#
-#      - name: Setup Gradle
-#        uses: gradle/gradle-build-action@v2
-#
-#      - name: Publish
-#        env:
-#          REPOSITORY_SNAPSHOTS_URL: ${{ secrets.REPOSITORY_SNAPSHOTS_URL }}
-#          REPOSITORY_RELEASES_URL: ${{ secrets.REPOSITORY_RELEASES_URL }}
-#          REPOSITORY_USERNAME: ${{ secrets.REPOSITORY_USERNAME }}
-#          REPOSITORY_PASSWORD: ${{ secrets.REPOSITORY_PASSWORD }}
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        continue-on-error: false
-#        run: ./gradlew publish -x detekt --no-daemon
