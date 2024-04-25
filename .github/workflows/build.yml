@@ -46,7 +46,7 @@ jobs:
       - name: Detekt
         run: ./gradlew detekt --no-daemon
 
-      - name: Generate kover coverage report
+      - name: Test and generate kover coverage report
         run: ./gradlew test koverXmlReport --no-daemon
 
       - name: Sonar
@@ -66,7 +66,7 @@ jobs:
         ]
     uses: ./.github/workflows/b.yml
     with:
-      jdk-version: ${{ env.MAX_JAVA_VERSION }}
+      jdk-version: ${{ MAX_JAVA_VERSION }}
       target-build-version: ${{ matrix.version }}
       arch: ${{ matrix.target.arch }}
       os: ${{ matrix.target.os }}
