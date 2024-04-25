@@ -10,7 +10,6 @@ on:
 
 env:
   JAVA_DISTRIBUTION: 'temurin'
-  MAX_JAVA_VERSION: 17
 
 jobs:
   check:
@@ -25,10 +24,10 @@ jobs:
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
-      - name: Setup JDK ${{ env.MAX_JAVA_VERSION }}
+      - name: Setup JDK ${{ vars.JDK_VERSION }}
         uses: actions/setup-java@v4.2.1
         with:
-          java-version: ${{ env.MAX_JAVA_VERSION }}
+          java-version: ${{ vars.JDK_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
 
       - name: Cache Gradle
@@ -66,7 +65,7 @@ jobs:
         ]
     uses: ./.github/workflows/b.yml
     with:
-      jdk-version: ${{ env.MAX_JAVA_VERSION }}
+      jdk-version: ${{ vars.JDK_VERSION }}
       target-build-version: ${{ matrix.version }}
       arch: ${{ matrix.target.arch }}
       os: ${{ matrix.target.os }}
