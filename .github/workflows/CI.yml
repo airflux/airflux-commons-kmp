@@ -81,6 +81,7 @@ jobs:
       target-build-version: ${{ matrix.version }}
       arch: ${{ matrix.target.arch }}
       os: ${{ matrix.target.os }}
+    secrets: inherit
 
 #    runs-on: ${{ matrix.target.os }}
 #    env:
