@@ -1,21 +1,18 @@
 on:
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-    workflow_call:
-      inputs:
-        jdk-version:
-          required: true
-          type: number
-        target-build-version:
-          required: true
-          type: number
-        arch:
-          required: true
-          type: string
-        os:
-          required: true
-          type: string
+  workflow_call:
+    inputs:
+      jdk-version:
+        required: true
+        type: number
+      target-build-version:
+        required: true
+        type: number
+      arch:
+        required: true
+        type: string
+      os:
+        required: true
+        type: string
 
 jobs:
   build:
