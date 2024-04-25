@@ -66,6 +66,22 @@ jobs:
       arch: ${{ matrix.target.arch }}
       os: ${{ matrix.target.os }}
 
+  publish:
+    needs: build
+    strategy:
+      max-parallel: 1
+      fail-fast: true
+      matrix:
+        version: [ 1.8 ]
+        target: [
+          { arch: x64, os: ubuntu-latest },
+        ]
+    uses: ./.github/workflows/publish.yml
+    with:
+      target-build-version: ${{ matrix.version }}
+      arch: ${{ matrix.target.arch }}
+      os: ${{ matrix.target.os }}
+
 #    runs-on: ${{ matrix.target.os }}
 #    env:
 #      JAVA_VERSION: ${{ matrix.version }}
