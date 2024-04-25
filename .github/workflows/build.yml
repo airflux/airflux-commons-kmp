@@ -49,4 +49,4 @@ jobs:
         with:
           path: ${{ github.workspace }}
           key: |
-            build-${{github.sha}}-jdk${{ matrix.version }}-${{matrix.target.arch}}
+            build-${{github.sha}}-jdk${{ inputs.target-build-version }}-${{ inputs.arch }}
