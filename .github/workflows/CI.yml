@@ -60,7 +60,7 @@ jobs:
         target: [
           { arch: x64, os: ubuntu-latest },
         ]
-    uses: ./.github/workflows/b.yml
+    uses: ./.github/workflows/build.yml
     with:
       target-build-version: ${{ matrix.version }}
       arch: ${{ matrix.target.arch }}
